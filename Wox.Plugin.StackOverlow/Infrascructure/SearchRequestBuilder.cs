@@ -9,8 +9,6 @@ namespace Wox.Plugin.StackOverlow.Infrascructure
             return new SearchRequest
             {
                 Query = rawQuery,
-                PageSize = 5,
-                Page = 1
             };
         }
     }
