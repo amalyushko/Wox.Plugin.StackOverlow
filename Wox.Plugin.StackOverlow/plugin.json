@@ -1,0 +1,12 @@
+﻿{
+    "ID": "2112A2EB-7652-4F1C-8D91-A71B0D219CD",
+    "ActionKeyword": "so",
+    "Name": "Stack Overflow",
+    "Description": "Search questions from Stack Overflow",
+    "Author": "Alexander Malyushko",
+    "Version": "0.0.1",
+    "Language": "csharp",
+    "Website": "http://www.getwox.com",
+    "IcoPath": "Images\\so.png",
+    "ExecuteFileName": "Wox.Plugin.StackOverlow.dll"
+}
