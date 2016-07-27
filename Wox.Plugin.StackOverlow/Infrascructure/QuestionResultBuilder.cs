@@ -14,11 +14,13 @@ namespace Wox.Plugin.StackOverlow.Infrascructure
 
         private const string NOT_ACCEPTED_ICON_FILENAME = "so.png";
 
-        private readonly PluginInitContext _context;
+        private readonly IPublicAPI _woxPluginApi;
 
-        public QuestionResultBuilder(PluginInitContext context)
+        public QuestionResultBuilder(IPublicAPI woxPluginApi)
         {
-            _context = context;
+            if (woxPluginApi == null) throw new ArgumentNullException(nameof(woxPluginApi));
+
+            _woxPluginApi = woxPluginApi;
         }
 
         public List<Result> Convert(IEnumerable<Question> questions)
@@ -47,22 +49,25 @@ namespace Wox.Plugin.StackOverlow.Infrascructure
                     }
                     catch (Exception exc)
                     {
-                        _context.API.ShowMsg($"Cannot open link {link}");
+                        _woxPluginApi.ShowMsg(_woxPluginApi.GetTranslation("wox_plugin_so_results_error_open_link"));
                         return false;
                     }
                 }
             };
         }
 
-        private static string GetIcon(Question question)
+        private string GetIcon(Question question)
         {
             var icon = question.IsAnswered ? ACCEPTED_ANSWER_ICON_FILENAME : NOT_ACCEPTED_ICON_FILENAME;
             return $"{IMAGES_PATH}/{icon}";
         }
 
-        private static string GetSubTitle(Question question)
+        private string GetSubTitle(Question question)
         {
-            return $"Answers count: {question.AnswerCount}. Tags: {string.Join(" ,", question.Tags)}";
+            var answersCountLiteral = string.Format(_woxPluginApi.GetTranslation("wox_plugin_so_results_answers_count"), question.AnswerCount);
+            var tagsLiteral = string.Format(_woxPluginApi.GetTranslation("wox_plugin_so_results_tags"), string.Join(" ,", question.Tags));
+
+            return $"{answersCountLiteral}. {tagsLiteral}.";
         }
     }
 }

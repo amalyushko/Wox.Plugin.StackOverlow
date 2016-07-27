@@ -7,7 +7,7 @@ namespace Wox.Plugin.StackOverlow.Infrascructure
         public static UserQueryExecutor Create(PluginInitContext context)
         {
             var stackOverflowApi = new StackOverflowApi();
-            var questionResultBuilder = new QuestionResultBuilder(context);
+            var questionResultBuilder = new QuestionResultBuilder(context.API);
             var questionsOrderer = new QuestionsOrderer();
 
             return new UserQueryExecutor(stackOverflowApi, questionResultBuilder, questionsOrderer);
