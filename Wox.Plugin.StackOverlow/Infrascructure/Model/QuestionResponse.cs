@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Wox.Plugin.StackOverlow.Infrascructure.Model
 {
-    public class QuestionResponse
+    public class QuestionResponse : Response
     {
         [JsonProperty("items")]
         public List<Question> Items { get; set; }

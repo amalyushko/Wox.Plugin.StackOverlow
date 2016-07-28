@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Web;
 using Newtonsoft.Json;
@@ -40,29 +38,38 @@ namespace Wox.Plugin.StackOverlow.Infrascructure.Api
             _apiUrl = string.Concat(API_METHOD_URL, ToQueryString(defaultParameters, true));
         }
 
-        public QuestionResponse GetQuestions(SearchRequest request)
+        public Response GetQuestions(SearchRequest request)
         {
-            var handler = new HttpClientHandler
-            {
-                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-            };
-            using (var httpClient = new HttpClient(handler))
+            using (var client = new DecompressionWebClient())
             {
                 var apiUrl = BuildUrl(request);
 
-                httpClient.BaseAddress = new Uri(apiUrl);
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                var response = httpClient.GetAsync(apiUrl).Result;
-                if (response.IsSuccessStatusCode)
+                string responseString;
+                try
                 {
-                    var responseContent = response.Content;
-
-                    var responseString = responseContent.ReadAsStringAsync().Result;
-                    return JsonConvert.DeserializeObject<QuestionResponse>(responseString);
+                    responseString = client.DownloadString(apiUrl);
+                }
+                catch (HttpRequestException exc)
+                {
+                    return new ErrorResponse(ResponseErrorType.BadRequest, exc.Message);
+                }
+                catch (WebException exc)
+                {
+                    return new NoConnectionResponse();
+                }
+                catch (Exception exc)
+                {
+                    return new NoConnectionResponse();
                 }
 
-                return null;
+                try
+                {
+                    return JsonConvert.DeserializeObject<QuestionResponse>(responseString);
+                }
+                catch (Exception exc)
+                {
+                    return new ErrorResponse(ResponseErrorType.DeserializationException);
+                }
             }
         }
 

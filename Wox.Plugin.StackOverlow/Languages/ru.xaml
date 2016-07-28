@@ -6,4 +6,6 @@
     <system:String x:Key="wox_plugin_so_plugin_name">Stack Overflow</system:String>
     <system:String x:Key="wox_plugin_so_plugin_description">Поиск вопросов со Stack Overflow</system:String>
     <system:String x:Key="wox_plugin_so_results_error_open_link">Не удалось открыть ссылку</system:String>
+    <system:String x:Key="wox_plugin_so_results_no_network_connection">Нет подключения к интернету</system:String>
+    <system:String x:Key="wox_plugin_so_results_error_response">Не удалось получить корректный ответ от сервера</system:String>
 </ResourceDictionary>

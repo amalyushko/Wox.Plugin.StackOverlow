@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Wox.Plugin.StackOverlow.Infrascructure.Api;
+using Wox.Plugin.StackOverlow.Infrascructure.Model;
 
 namespace Wox.Plugin.StackOverlow.Infrascructure
 {
@@ -30,10 +32,36 @@ namespace Wox.Plugin.StackOverlow.Infrascructure
                 return new List<Result>();
             }
 
-            var questionResponse = _stackOverflowApi.GetQuestions(SearchRequestBuilder.Parse(query.Search));
+            var response = _stackOverflowApi.GetQuestions(SearchRequestBuilder.Parse(query.Search));
 
-            var orderedQuestions = _questionsOrderer.GetOrderedQuestions(questionResponse.Items);
-            return _questionResultBuilder.Convert(orderedQuestions);
-        } 
+            return ProcessServerResponse(response);
+        }
+
+        private List<Result> ProcessServerResponse(Response response)
+        {
+            if (response == null) throw new ArgumentNullException(nameof(response));
+
+            var questionsResponse = response as QuestionResponse;
+            if (questionsResponse != null)
+            {
+                var orderedQuestions = _questionsOrderer.GetOrderedQuestions(questionsResponse.Items);
+                return _questionResultBuilder.Convert(orderedQuestions);
+            }
+
+            var noConnectionResponse = response as NoConnectionResponse;
+            if (noConnectionResponse != null)
+            {
+                return new List<Result> {_questionResultBuilder.ConvertToNoConnectionResult()};
+            }
+
+            var requestErrorResponse = response as ErrorResponse;
+            if (requestErrorResponse != null)
+            {
+                return new List<Result> { _questionResultBuilder.ConvertToRequestErrorResult(requestErrorResponse) };
+            }
+
+            // for now just return empty list
+            return new List<Result>();
+        }
     }
 }

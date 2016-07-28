@@ -14,6 +14,8 @@ namespace Wox.Plugin.StackOverlow.Infrascructure
 
         private const string NOT_ACCEPTED_ICON_FILENAME = "so.png";
 
+        private const string NOT_NETWORK_CONNECTION_ICON_FILENAME = "no_connection.png";
+
         private readonly IPublicAPI _woxPluginApi;
 
         public QuestionResultBuilder(IPublicAPI woxPluginApi)
@@ -56,10 +58,24 @@ namespace Wox.Plugin.StackOverlow.Infrascructure
             };
         }
 
+        public Result ConvertToNoConnectionResult()
+        {
+            return new Result
+            {
+                Title = _woxPluginApi.GetTranslation("wox_plugin_so_results_no_network_connection"),
+                IcoPath = GetIcon(NOT_NETWORK_CONNECTION_ICON_FILENAME)
+            };
+        }
+
         private string GetIcon(Question question)
         {
             var icon = question.IsAnswered ? ACCEPTED_ANSWER_ICON_FILENAME : NOT_ACCEPTED_ICON_FILENAME;
-            return $"{IMAGES_PATH}/{icon}";
+            return GetIcon(icon);
+        }
+
+        private static string GetIcon(string iconName)
+        {
+            return $"{IMAGES_PATH}/{iconName}";
         }
 
         private string GetSubTitle(Question question)
@@ -68,6 +84,18 @@ namespace Wox.Plugin.StackOverlow.Infrascructure
             var tagsLiteral = string.Format(_woxPluginApi.GetTranslation("wox_plugin_so_results_tags"), string.Join(" ,", question.Tags));
 
             return $"{answersCountLiteral}. {tagsLiteral}.";
+        }
+
+        public Result ConvertToRequestErrorResult(ErrorResponse errorResponse)
+        {
+            var title = string.IsNullOrEmpty(errorResponse.Message)
+                ? _woxPluginApi.GetTranslation("wox_plugin_so_results_error_response")
+                : errorResponse.Message;
+
+            return new Result
+            {
+                Title = title
+            };
         }
     }
 }
