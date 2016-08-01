@@ -53,7 +53,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Infrascructure\Api\SearchParameters.cs" />
-    <Compile Include="Infrascructure\IQuestionsOrderer.cs" />
+    <Compile Include="Infrascructure\IQuestionsOrderStrategy.cs" />
     <Compile Include="Infrascructure\Model\ErrorResponse.cs" />
     <Compile Include="Infrascructure\Model\ResponseErrorType.cs" />
     <Compile Include="Infrascructure\Model\Response.cs" />
@@ -63,7 +63,7 @@
     <Compile Include="Infrascructure\Model\SearchRequest.cs" />
     <Compile Include="Infrascructure\UserQueryExecutorFactory.cs" />
     <Compile Include="Infrascructure\QuestionResultBuilder.cs" />
-    <Compile Include="Infrascructure\QuestionsOrderer.cs" />
+    <Compile Include="Infrascructure\ByAnsweredAndScoreQuestionsOrderStrategy.cs" />
     <Compile Include="Infrascructure\SearchRequestBuilder.cs" />
     <Compile Include="Infrascructure\Api\StackOverflowApi.cs" />
     <Compile Include="Infrascructure\UserQueryExecutor.cs" />

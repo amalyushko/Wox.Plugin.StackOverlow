@@ -12,17 +12,17 @@ namespace Wox.Plugin.StackOverlow.Infrascructure
 
         private readonly QuestionResultBuilder _questionResultBuilder;
 
-        private readonly IQuestionsOrderer _questionsOrderer;
+        private readonly IQuestionsOrderStrategy _questionsOrderStrategy;
 
-        public UserQueryExecutor(StackOverflowApi stackOverflowApi, QuestionResultBuilder questionResultBuilder, IQuestionsOrderer questionsOrderer)
+        public UserQueryExecutor(StackOverflowApi stackOverflowApi, QuestionResultBuilder questionResultBuilder, IQuestionsOrderStrategy questionsOrderStrategy)
         {
             if (stackOverflowApi == null) throw new ArgumentNullException(nameof(stackOverflowApi));
             if (questionResultBuilder == null) throw new ArgumentNullException(nameof(questionResultBuilder));
-            if (questionsOrderer == null) throw new ArgumentNullException(nameof(questionsOrderer));
+            if (questionsOrderStrategy == null) throw new ArgumentNullException(nameof(questionsOrderStrategy));
 
             _stackOverflowApi = stackOverflowApi;
             _questionResultBuilder = questionResultBuilder;
-            _questionsOrderer = questionsOrderer;
+            _questionsOrderStrategy = questionsOrderStrategy;
         }
 
         public List<Result> Execute(Query query)
@@ -44,7 +44,7 @@ namespace Wox.Plugin.StackOverlow.Infrascructure
             var questionsResponse = response as QuestionResponse;
             if (questionsResponse != null)
             {
-                var orderedQuestions = _questionsOrderer.GetOrderedQuestions(questionsResponse.Items);
+                var orderedQuestions = _questionsOrderStrategy.GetOrderedQuestions(questionsResponse.Items);
                 return _questionResultBuilder.Convert(orderedQuestions);
             }
 

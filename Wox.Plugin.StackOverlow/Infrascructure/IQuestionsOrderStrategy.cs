@@ -4,7 +4,7 @@ using Wox.Plugin.StackOverlow.Infrascructure.Model;
 
 namespace Wox.Plugin.StackOverlow.Infrascructure
 {
-    public interface IQuestionsOrderer
+    public interface IQuestionsOrderStrategy
     {
         IOrderedEnumerable<Question> GetOrderedQuestions(List<Question> questions);
     }

@@ -4,7 +4,7 @@ using Wox.Plugin.StackOverlow.Infrascructure.Model;
 
 namespace Wox.Plugin.StackOverlow.Infrascructure
 {
-    public class QuestionsOrderer : IQuestionsOrderer
+    public class ByAnsweredAndScoreQuestionsOrderStrategy : IQuestionsOrderStrategy
     {
         public IOrderedEnumerable<Question> GetOrderedQuestions(List<Question> questions)
         {
@@ -13,4 +13,4 @@ namespace Wox.Plugin.StackOverlow.Infrascructure
                 .ThenByDescending(i => i.Score);
         }
     }
-}
+}   

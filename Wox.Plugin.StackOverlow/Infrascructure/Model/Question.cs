@@ -9,21 +9,21 @@ namespace Wox.Plugin.StackOverlow.Infrascructure.Model
     public class Question
     {
         [JsonProperty("answer_count")]
-        public int AnswerCount { get; internal set; }
+        public int AnswerCount { get; set; }
 
         [JsonProperty("is_answered")]
-        public bool IsAnswered { get; internal set; }
+        public bool IsAnswered { get; set; }
 
         [JsonProperty("link")]
-        public string Link { get; internal set; }
+        public string Link { get; set; }
 
         [JsonProperty("score")]
-        public int Score { get; internal set; }
+        public int Score { get; set; }
 
         [JsonProperty("tags")]
-        public string[] Tags { get; internal set; }
+        public string[] Tags { get; set; }
 
         [JsonProperty("title")]
-        public string Title { get; internal set; }
+        public string Title { get; set; }
     }
 }

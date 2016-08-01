@@ -8,7 +8,7 @@ namespace Wox.Plugin.StackOverlow.Infrascructure
         {
             var stackOverflowApi = new StackOverflowApi();
             var questionResultBuilder = new QuestionResultBuilder(context.API);
-            var questionsOrderer = new QuestionsOrderer();
+            var questionsOrderer = new ByAnsweredAndScoreQuestionsOrderStrategy();
 
             return new UserQueryExecutor(stackOverflowApi, questionResultBuilder, questionsOrderer);
         }
