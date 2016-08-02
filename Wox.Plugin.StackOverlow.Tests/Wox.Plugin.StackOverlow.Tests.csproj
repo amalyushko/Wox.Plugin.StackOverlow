@@ -80,7 +80,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ByAnsweredAndScoreQuestionsOrderStrategyTests.cs" />
+    <Compile Include="QuestionsOrderStrategy\ByAnsweredAndScoreQuestionsOrderStrategyTests.cs" />
+    <Compile Include="QuestionsOrderStrategy\ByQuestionsOrderStrategyTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -5,11 +5,13 @@ using NUnit.Framework;
 using Wox.Plugin.StackOverlow.Infrascructure;
 using Wox.Plugin.StackOverlow.Infrascructure.Model;
 
-namespace Wox.Plugin.StackOverlow.Tests
+namespace Wox.Plugin.StackOverlow.Tests.QuestionsOrderStrategy
 {
     [TestFixture]
-    public class ByAnsweredAndScoreQuestionsOrderStrategyTests
+    public abstract class BaseQuestionsOrderStrategyTests
     {
+        public abstract IQuestionsOrderStrategy GetOrderStategyInstance();
+
         [Test]
         public void GetOrderedQuestions_SameItemsCountAfterOrdering()
         {
@@ -22,7 +24,7 @@ namespace Wox.Plugin.StackOverlow.Tests
                 unorderedQuestions.Add(new Question {Score = i});
             }
 
-            var stategy = GetOrderStategy();
+            var stategy = GetOrderStategyInstance();
             var orderedQuestions = stategy.GetOrderedQuestions(unorderedQuestions);
 
             Assert.That(orderedQuestions.Count(), Is.EqualTo(unorderedQuestions.Count));
@@ -31,8 +33,6 @@ namespace Wox.Plugin.StackOverlow.Tests
         [Test]
         public void GetOrderedQuestions_SameItemsAfterOrdering()
         {
-            const int questionsCount = 5;
-
             var unorderedQuestions = new List<Question>
             {
                 new Question {Score = 11},
@@ -42,7 +42,7 @@ namespace Wox.Plugin.StackOverlow.Tests
                 new Question {Score = 0},
             };
 
-            var stategy = GetOrderStategy();
+            var stategy = GetOrderStategyInstance();
             var orderedQuestions = stategy.GetOrderedQuestions(unorderedQuestions);
 
             CollectionAssert.AreEquivalent(orderedQuestions, unorderedQuestions);
@@ -60,7 +60,7 @@ namespace Wox.Plugin.StackOverlow.Tests
                 new Question {Score = 142},
             };
 
-            var stategy = GetOrderStategy();
+            var stategy = GetOrderStategyInstance();
             var orderedQuestions = stategy.GetOrderedQuestions(unorderedQuestions);
 
             Assert.That(orderedQuestions, Is.Ordered.By("Score").Descending);
@@ -78,7 +78,7 @@ namespace Wox.Plugin.StackOverlow.Tests
                 new Question {Score = 10000},
             };
 
-            var stategy = GetOrderStategy();
+            var stategy = GetOrderStategyInstance();
             var orderedQuestions = stategy.GetOrderedQuestions(unorderedQuestions);
 
             Assert.That(orderedQuestions, Is.Ordered.Using(new Comparison<Question>(CompareQuestions)).Descending);
@@ -90,7 +90,7 @@ namespace Wox.Plugin.StackOverlow.Tests
         {
             var emptyQuestions = new List<Question>();
 
-            var stategy = GetOrderStategy();
+            var stategy = GetOrderStategyInstance();
 
             Assert.DoesNotThrow(() => stategy.GetOrderedQuestions(emptyQuestions));
         }
@@ -100,7 +100,7 @@ namespace Wox.Plugin.StackOverlow.Tests
         {
             var emptyQuestions = new List<Question>();
 
-            var stategy = GetOrderStategy();
+            var stategy = GetOrderStategyInstance();
             var orderedQuestions = stategy.GetOrderedQuestions(emptyQuestions);
 
             CollectionAssert.IsEmpty(orderedQuestions);
@@ -124,7 +124,7 @@ namespace Wox.Plugin.StackOverlow.Tests
                 new Question {Score = 4},
             };
 
-            var stategy = GetOrderStategy();
+            var stategy = GetOrderStategyInstance();
             var orderedQuestions = stategy.GetOrderedQuestions(unorderedQuestions);
 
             Assert.That(orderedQuestions, Is.Ordered.Using(new Comparison<Question>(CompareQuestions)).Descending);
@@ -134,11 +134,6 @@ namespace Wox.Plugin.StackOverlow.Tests
         {
             var result = q1.IsAnswered.CompareTo(q2.IsAnswered);
             return result == 0 ? q2.Score.CompareTo(q2.Score) : result;
-        }
-
-        private ByAnsweredAndScoreQuestionsOrderStrategy GetOrderStategy()
-        {
-            return new ByAnsweredAndScoreQuestionsOrderStrategy();
         }
     }
 }
