@@ -52,6 +52,8 @@
     <Compile Include="Infrascructure\Api\DecompressionWebClient.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Infrascructure\Api\IDeserializer.cs" />
+    <Compile Include="Infrascructure\Api\JsonNetDeserializer.cs" />
     <Compile Include="Infrascructure\Api\SearchParameters.cs" />
     <Compile Include="Infrascructure\IQuestionsOrderStrategy.cs" />
     <Compile Include="Infrascructure\Model\ErrorResponse.cs" />

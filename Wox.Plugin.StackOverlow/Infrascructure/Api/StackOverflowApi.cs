@@ -26,8 +26,12 @@ namespace Wox.Plugin.StackOverlow.Infrascructure.Api
 
         private readonly string _apiUrl;
 
-        public StackOverflowApi()
+        private readonly IDeserializer _deserializer;
+
+        public StackOverflowApi(IDeserializer deserializer)
         {
+            _deserializer = deserializer;
+
             var defaultParameters = new Dictionary<string, string>
             {
                 { SearchParameters.ORDER, DEFAULT_ORDER_VALUE },
@@ -64,7 +68,7 @@ namespace Wox.Plugin.StackOverlow.Infrascructure.Api
 
                 try
                 {
-                    return JsonConvert.DeserializeObject<QuestionResponse>(responseString);
+                    return _deserializer.Deserialize<QuestionResponse>(responseString);
                 }
                 catch (Exception exc)
                 {
