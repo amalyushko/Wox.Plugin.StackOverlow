@@ -53,8 +53,10 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Infrascructure\Api\IDeserializer.cs" />
+    <Compile Include="Infrascructure\Api\IStackOverflowApi.cs" />
     <Compile Include="Infrascructure\Api\JsonNetDeserializer.cs" />
     <Compile Include="Infrascructure\Api\SearchParameters.cs" />
+    <Compile Include="Infrascructure\IconPath.cs" />
     <Compile Include="Infrascructure\IQuestionsOrderStrategy.cs" />
     <Compile Include="Infrascructure\Model\ErrorResponse.cs" />
     <Compile Include="Infrascructure\Model\ResponseErrorType.cs" />

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using Wox.Plugin.StackOverlow.Infrascructure.Model;
 
 namespace Wox.Plugin.StackOverlow.Infrascructure
@@ -10,22 +11,47 @@ namespace Wox.Plugin.StackOverlow.Infrascructure
     {
         private const string IMAGES_PATH = "Images";
 
-        private const string ACCEPTED_ANSWER_ICON_FILENAME = "accepted_answer.png";
-
-        private const string NOT_ACCEPTED_ICON_FILENAME = "so.png";
-
-        private const string NOT_NETWORK_CONNECTION_ICON_FILENAME = "no_connection.png";
-
         private readonly IPublicAPI _woxPluginApi;
 
-        public QuestionResultBuilder(IPublicAPI woxPluginApi)
+        private readonly IQuestionsOrderStrategy _questionsOrderStrategy;
+
+        public QuestionResultBuilder(IPublicAPI woxPluginApi, IQuestionsOrderStrategy questionsOrderStrategy)
         {
             if (woxPluginApi == null) throw new ArgumentNullException(nameof(woxPluginApi));
+            if (questionsOrderStrategy == null) throw new ArgumentNullException(nameof(questionsOrderStrategy));
 
             _woxPluginApi = woxPluginApi;
+            _questionsOrderStrategy = questionsOrderStrategy;
         }
 
-        public List<Result> Convert(IEnumerable<Question> questions)
+        public List<Result> ProcessServerResponse(Response response)
+        {
+            if (response == null) throw new ArgumentNullException(nameof(response));
+
+            var questionsResponse = response as QuestionResponse;
+            if (questionsResponse != null)
+            {
+                var orderedQuestions = _questionsOrderStrategy.GetOrderedQuestions(questionsResponse.Items);
+                return ConvertQuestions(orderedQuestions);
+            }
+
+            var noConnectionResponse = response as NoConnectionResponse;
+            if (noConnectionResponse != null)
+            {
+                return new List<Result> { ConvertToNoConnectionResult() };
+            }
+
+            var requestErrorResponse = response as ErrorResponse;
+            if (requestErrorResponse != null)
+            {
+                return new List<Result> { ConvertToRequestErrorResult(requestErrorResponse) };
+            }
+
+            // for now just return empty list
+            return new List<Result>();
+        }
+
+        private List<Result> ConvertQuestions(IEnumerable<Question> questions)
         {
             return questions.Select(ConvertQuestionToResult).ToList();
         }
@@ -58,18 +84,18 @@ namespace Wox.Plugin.StackOverlow.Infrascructure
             };
         }
 
-        public Result ConvertToNoConnectionResult()
+        private Result ConvertToNoConnectionResult()
         {
             return new Result
             {
                 Title = _woxPluginApi.GetTranslation("wox_plugin_so_results_no_network_connection"),
-                IcoPath = GetIcon(NOT_NETWORK_CONNECTION_ICON_FILENAME)
+                IcoPath = GetIcon(IconPath.NOT_NETWORK_CONNECTION_ICON_FILENAME)
             };
         }
 
         private string GetIcon(Question question)
         {
-            var icon = question.IsAnswered ? ACCEPTED_ANSWER_ICON_FILENAME : NOT_ACCEPTED_ICON_FILENAME;
+            var icon = question.IsAnswered ? IconPath.ACCEPTED_ANSWER_ICON_FILENAME : IconPath.NOT_ACCEPTED_ICON_FILENAME;
             return GetIcon(icon);
         }
 
@@ -80,13 +106,20 @@ namespace Wox.Plugin.StackOverlow.Infrascructure
 
         private string GetSubTitle(Question question)
         {
+            var sb = new StringBuilder();
             var answersCountLiteral = string.Format(_woxPluginApi.GetTranslation("wox_plugin_so_results_answers_count"), question.AnswerCount);
-            var tagsLiteral = string.Format(_woxPluginApi.GetTranslation("wox_plugin_so_results_tags"), string.Join(" ,", question.Tags));
+            sb.AppendFormat("{0}.", answersCountLiteral);
 
-            return $"{answersCountLiteral}. {tagsLiteral}.";
+            if (question.Tags != null && question.Tags.Any())
+            {
+                var tagsLiteral = string.Format(_woxPluginApi.GetTranslation("wox_plugin_so_results_tags"), string.Join(" ,", question.Tags));
+                sb.AppendFormat(" {0}.", tagsLiteral);
+            }
+
+            return sb.ToString();
         }
 
-        public Result ConvertToRequestErrorResult(ErrorResponse errorResponse)
+        private Result ConvertToRequestErrorResult(ErrorResponse errorResponse)
         {
             var title = string.IsNullOrEmpty(errorResponse.Message)
                 ? _woxPluginApi.GetTranslation("wox_plugin_so_results_error_response")

@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web;
-using Newtonsoft.Json;
 using Wox.Plugin.StackOverlow.Infrascructure.Model;
 
 namespace Wox.Plugin.StackOverlow.Infrascructure.Api
 {
-    public class StackOverflowApi
+    public class StackOverflowApi : IStackOverflowApi
     {
         private const string API_METHOD_URL = "http://api.stackexchange.com/2.2/search/advanced";
 

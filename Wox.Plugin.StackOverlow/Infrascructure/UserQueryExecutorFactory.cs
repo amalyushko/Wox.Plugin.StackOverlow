@@ -8,10 +8,11 @@ namespace Wox.Plugin.StackOverlow.Infrascructure
         {
             var deserializer = new JsonNetDeserializer();
             var stackOverflowApi = new StackOverflowApi(deserializer);
-            var questionResultBuilder = new QuestionResultBuilder(context.API);
-            var questionsOrderer = new ByAnsweredAndScoreQuestionsOrderStrategy();
+            var orderStrategy = new ByAnsweredAndScoreQuestionsOrderStrategy();
 
-            return new UserQueryExecutor(stackOverflowApi, questionResultBuilder, questionsOrderer);
+            var questionResultBuilder = new QuestionResultBuilder(context.API, orderStrategy);
+
+            return new UserQueryExecutor(stackOverflowApi, questionResultBuilder);
         }
     }
 }

@@ -17,8 +17,10 @@ namespace Wox.Plugin.StackOverlow
 	    }
 
 	    public List<Result> Query(Query query)
-		{
-		    return _executor.Execute(query); 
+	    {
+	        var searchRequest = SearchRequestBuilder.Parse(query.Search);
+
+		    return _executor.Execute(searchRequest); 
 		}
 
 	    public string GetTranslatedPluginTitle()
