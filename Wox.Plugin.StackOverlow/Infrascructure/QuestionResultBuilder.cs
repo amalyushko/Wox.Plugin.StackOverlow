@@ -112,7 +112,7 @@ namespace Wox.Plugin.StackOverlow.Infrascructure
 
             if (question.Tags != null && question.Tags.Any())
             {
-                var tagsLiteral = string.Format(_woxPluginApi.GetTranslation("wox_plugin_so_results_tags"), string.Join(" ,", question.Tags));
+                var tagsLiteral = string.Format(_woxPluginApi.GetTranslation("wox_plugin_so_results_tags"), string.Join(", ", question.Tags));
                 sb.AppendFormat(" {0}.", tagsLiteral);
             }
 

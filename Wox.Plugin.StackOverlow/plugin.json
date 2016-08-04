@@ -3,10 +3,10 @@
     "ActionKeyword": "so",
     "Name": "Stack Overflow",
     "Description": "Search questions from Stack Overflow",
-    "Author": "Alexander Malyushko",
-    "Version": "0.0.1",
+    "Author": "amalyushko",
+    "Version": "0.1.0",
     "Language": "csharp",
-    "Website": "http://www.getwox.com",
+    "Website": "https://github.com/amalyushko/Wox.Plugin.StackOverlow",
     "IcoPath": "Images\\so.png",
     "ExecuteFileName": "Wox.Plugin.StackOverlow.dll"
 }
